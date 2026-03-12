@@ -1,5 +1,5 @@
 from expense import Expenses
-
+import datetime
 
 class Tracker:
     def __init__(self):
@@ -14,16 +14,29 @@ class Tracker:
             self.list.pop(index)
 
     def update_expense(self, index_user, x):
-        if index_user <= 1 and index_user <= len(self.list):
+        if 1 <= index_user and index_user <= len(self.list):
             index = index_user - 1
             
-        expense = self.list[index]
+            expense = self.list[index]
 
-        try:
-            expense.value = float(x)
-        except (ValueError, TypeError):
-            expense.name = str(x).strip()
-                                
+            try:
+                expense.value = float(x)
+                return
+            except ValueError:
+                pass
+                try:
+                    expense.date = datetime.datetime.strptime(x, "%Y-%m-%d")
+                    return
+                except ValueError:
+                    pass
+                try:
+                    expense.date = datetime.datetime.strptime(x, "%Y-%m-%d")
+                    return
+                except ValueError:
+                    expense.name = str(x).strip()
+                    return
+
+
 
     def __str__(self):
         lines = [ ]
@@ -31,10 +44,11 @@ class Tracker:
             lines.append(str(expense))
         return "\n".join(lines)
             
-
+"""
 t = Tracker()
 r = Expenses()
-r.create_expense("Resenhinha", 40.30, (12, 3, 2026) )
+r.create_expense("Resenhinha", 40.30, datetime.datetime(2026, 3, 12) )
 t.add_expense(r)
 t.update_expense(1, 30.40)
-print(t) 
+print(r.date.year) 
+"""
