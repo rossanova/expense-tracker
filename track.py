@@ -13,10 +13,17 @@ class Tracker:
             index = index_user - 1
             self.list.pop(index)
 
-    def update_expense(self, index_user):
+    def update_expense(self, index_user, x):
         if index_user <= 1 and index_user <= len(self.list):
             index = index_user - 1
+            
+        expense = self.list[index]
 
+        try:
+            expense.value = float(x)
+        except (ValueError, TypeError):
+            expense.name = str(x).strip()
+                                
 
     def __str__(self):
         lines = [ ]
@@ -27,6 +34,7 @@ class Tracker:
 
 t = Tracker()
 r = Expenses()
-r.create_expense("Rafael", "15")
+r.create_expense("Resenhinha", 40.30 )
 t.add_expense(r)
-print(t)
+t.update_expense(1, 30.20)
+print(t) 

@@ -1,11 +1,12 @@
 class Expenses:
     def __init__(self):
         self.name = ''
-        self.value = int(0) 
+        self.value = float(0) 
+        date
 
     def create_expense(self, name, value):
         self.name = name
-        self.value = int(value)
+        self.value = float(value)
            
 
     def __str__(self):
