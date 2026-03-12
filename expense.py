@@ -1,5 +1,5 @@
 import datetime
-
+import json
 class Expenses:
     def __init__(self):
         self.name = ''
@@ -10,6 +10,13 @@ class Expenses:
         self.name = name
         self.value = float(value)
         self.date = date
+
+    def dictionary(self):
+        return { 
+            "name" : {self.name}, 
+            "value" : {self.value},   
+            "date": {self.date}
+        }
 
     def __str__(self):
         return (f"{self.name}: {self.value} R$, {self.date}")
