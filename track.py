@@ -34,7 +34,7 @@ class Tracker:
 
 t = Tracker()
 r = Expenses()
-r.create_expense("Resenhinha", 40.30 )
+r.create_expense("Resenhinha", 40.30, (12, 3, 2026) )
 t.add_expense(r)
-t.update_expense(1, 30.20)
+t.update_expense(1, 30.40)
 print(t) 
