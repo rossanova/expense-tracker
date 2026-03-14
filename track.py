@@ -16,29 +16,24 @@ class Tracker:
             index = index_user - 1
             self.list.pop(index)
 
-    def update_expense(self, index_user, x):
+    def update_expense(self, index_user, field, new_value):
         if 1 <= index_user and index_user <= len(self.list):
             index = index_user - 1
             
             expense = self.list[index]
+        
 
-            try:
-                expense.value = float(x)
-                return
-            except ValueError:
-                pass
-                try:
-                    expense.date = datetime.datetime.strptime(x, "%Y-%m-%d")
-                    return
-                except ValueError:
-                    pass
-                try:
-                    expense.date = datetime.datetime.strptime(x, "%Y-%m-%d")
-                    return
-                except ValueError:
-                    expense.name = str(x).strip()
-                    return
+            if field == "Name" :
+                expense.name = new_value.strip()
+            
+            elif field == "Value" :
+                expense.value = float(new_value)
 
+            elif field == "Date" :
+                expense.date = datetime.datetime.strptime(new_value, "%d-%m-%Y")
+
+            else:
+                raise NameError
     def save_expenses(self, data):
         data = [ ]
         for expense in self.list:
@@ -66,10 +61,11 @@ class Tracker:
             lines.append(str(expense))
         return "\n".join(lines)
             
-''' 
-t = Tracker()
+'''
+ r()
 r = Expenses()
 r.create_expense("Resenhinha", 40.30, datetime.datetime(2026, 3, 12) )
 t.add_expense(r)
-t.update_expense(1, 30.40)
+t.update_expense(1, "Value", 20.40) 
+print(r.value)
 '''
