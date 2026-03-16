@@ -1,54 +1,77 @@
-from expense import Expenses
+from expense import Expense
 from track import  Tracker
-import json
-import datetime
 import argparse
+import datetime
+
+parser = argparse.ArgumentParser(description= "Track your expenses.")
+
+subparsers = parser.add_subparsers(dest="command")
+add_parser = subparsers.add_parser("add")
+add_parser.add_argument("--amount", type= float)
+add_parser.add_argument("--description", type=str)
+
+delete_parser = subparsers.add_parser("delete")
+delete_parser.add_argument("--id", type=int)
+
+list_parser = subparsers.add_parser("list")
+
+total_amount = subparsers.add_parser("summary")
+
+month_total = subparsers.add_parser("summary-monthly")
+month_total.add_argument("--month", type=int)
+
+update = subparsers.add_parser("update")
+update.add_argument("--index")
+update.add_argument("--field")
+update.add_argument("--new_value")
 
 
-track = Tracker()
+args = parser.parse_args()
 
-while True:
-    print("1 - Add an Expense")
-    print("2 - Update an Expanse")
-    print("3 - Delete an Expense")
-    print("4 - View all Expenses")
+if args.command == "add":
+    tracker = Tracker()
+    tracker.load_saves()
+    id = tracker.next_id()
+    datenow = datetime.today()
+    x = datenow.strftime("%Y-%m-%d")
 
-    x = input("Enter your input: ")
+    temporary_expense = Expense(
+    expense_id = id,
+    description = args.description,
+    amount = args.amount,
+    date = x
+    )
+    tracker.add_expense(temporary_expense)
+    tracker.save_expenses()
 
-    if x == "1":
-        r = Expenses()
-        r.create_expense(
-            name = input("Create a name: "),
-            value = float(input(f"Create a value: ")),
-            date = (input("Create a date: ")),
-        )
-        track.add_expense(r)
+elif args.command == "delete":
+    tracker = Tracker()
+    tracker.load_saves()
+    tracker.delete_expense(args.id)
+    tracker.save_expenses()
 
-    elif x == "2":
-        if len(track.list) == 0:
-            print("There are no expenses to be actualized")
-        else:
-            print(track)
+elif args.command == "list":
+    tracker = Tracker()
+    tracker.load_saves()
+    print(tracker)
 
-            try:
-                index_user = int(input("Which expense do you want to change? "))
-            except ValueError, IndexError, TypeError, NameError:
-                print("Please enter a valid index")
-            else:
-                field = input("What field a change: ")
-                new_value = input("Insert the new value: ")   
-                track.update_expense(index_user, field, new_value )
+elif args.command == "summary": 
+    tracker = Tracker()
+    tracker.load_saves()
+    print(tracker.total_amount()) 
 
-    elif x == "3":
-        if len(track.list) == 0:
-            print("There is no expenses to be deleted")
-        else:
-            print(track)
-            z = int(input("Which expense do you want to delete? "))
-            track.delete_expense(z)
+elif args.command == "summary-monthly":
+    tracker = Tracker()
+    tracker.load_saves()
+    tracker.month_total(month= args.month)
+    print(tracker.month_total(args.month))
 
-    elif x == "4":
-        print(track)
-    else:
-        break
-    
+elif args.command == "update":
+    tracker = Tracker()
+    tracker.load_saves()
+    tracker.update_expense(
+        index_user= args.index,
+        field= args.field,
+        new_value= args.new_value
+    )
+    tracker.save_expenses()

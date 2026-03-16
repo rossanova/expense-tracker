@@ -79,7 +79,7 @@ class Tracker:
         total = 0
         for expense in self.expenses:
             total += expense.amount
-            return
+        return total
 
     def month_total(self, month):
         total = 0
