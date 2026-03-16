@@ -1,26 +1,19 @@
 import datetime
 import json
-class Expenses:
-    def __init__(self):
-        self.name = ''
-        self.value = float(0) 
-        self.date = datetime.datetime(day=1, month=1, year=1)
-
-    def create_expense(self, name, value, date):
-        self.name = name
-        self.value = float(value)
+class Expense:
+    def __init__(self, expense_id, description, amount, date):
+        self.id = expense_id
+        self.description = description
+        self.amount = amount 
         self.date = date
-
-    def dictionary(self):
+    def to_dict(self):
         return { 
-            "name" : {self.name}, 
-            "value" : {self.value},   
-            "date": {self.date}
+            "id" : self.id, 
+            "description" : self.description,
+            "amount": self.amount,
+            "date": self.date
         }
 
     def __str__(self):
-        return (f"{self.name}: {self.value} R$, {self.date}")
+        return (f"Date: {self.date} | Description : {self.description} | Amount : {self.amount} | ID {self.id}")
     
-
-    
-

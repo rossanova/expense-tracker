@@ -2,6 +2,8 @@ from expense import Expenses
 from track import  Tracker
 import json
 import datetime
+import argparse
+
 
 track = Tracker()
 
@@ -24,12 +26,18 @@ while True:
 
     elif x == "2":
         if len(track.list) == 0:
-            print("There is no expenses to be actualized")
+            print("There are no expenses to be actualized")
         else:
             print(track)
-            y = (input("Which expense do you want to actualize? "))
-            k = input(" '' = name | number = value | date = date time ")
-            track.update_expense(y, k)
+
+            try:
+                index_user = int(input("Which expense do you want to change? "))
+            except ValueError, IndexError, TypeError, NameError:
+                print("Please enter a valid index")
+            else:
+                field = input("What field a change: ")
+                new_value = input("Insert the new value: ")   
+                track.update_expense(index_user, field, new_value )
 
     elif x == "3":
         if len(track.list) == 0:
