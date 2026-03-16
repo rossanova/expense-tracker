@@ -1,5 +1,4 @@
-import datetime
-import json
+
 class Expense:
     def __init__(self, expense_id, description, amount, date):
         self.id = expense_id

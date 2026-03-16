@@ -7,9 +7,8 @@ class Tracker:
         self.expenses = [ ]
 
     def add_expense(self, expense):
-        
         self.expenses.append(expense)
-
+        print(f"Expense added sucessfully (ID: {expense.id})")
 
     def next_id(self):
         if len(self.expenses) < 1:
@@ -25,31 +24,26 @@ class Tracker:
         for expense in self.expenses:
             if expense.id == index:
                 self.expenses.remove(expense)
-                return
+                return print("Expense deleted sucessefully")
             
 
 
     def update_expense(self, index_user, field, new_value):
-        if 1 <= index_user and index_user <= len(self.expenses):
-            index = index_user - 1
+        for expense in self.expenses:
+            if expense.id == index_user:
             
-            expense = self.expenses[index]
-        
+                if field == "Description" :
+                    expense.description = new_value.strip()
 
-            if field == "ID":
-                expense.id = int(new_value)
 
-            elif field == "Description" :
-                expense.description = new_value.strip()
-            
-            elif field == "Amount" :
-                expense.amount = float(new_value)
+                elif field == "Amount" :
+                    expense.amount = float(new_value)
 
-            elif field == "Date" :
-                expense.date = datetime.datetime.strptime(new_value, "%d-%m-%Y")
-
+                else:
+                    print("Invalid field.")
             else:
-                print("Invalid field.")
+                print("Invalide ID")
+            
 
     def save_expenses(self):
         data = []
@@ -60,26 +54,33 @@ class Tracker:
 
 
     def load_saves(self):
-        with open("expenses.json", "r") as f:
-            data = json.load(f)
+        try:
+            with open("expenses.json", "r") as f:
+                data = json.load(f)
+        
+        except FileNotFoundError:
+            print("There is nothing to load")
+            self.expenses = []
+            return
 
-        self.expenses = [ ]
+        self.expenses = []
 
         for expenses in data:
             e = Expense(
-            expenses["id"],
-            expenses["description"],
-            expenses["amount"],
-            expenses["date"]
+                expenses["id"],
+                expenses["description"],
+                expenses["amount"],
+                expenses["date"]
         )
-
             self.expenses.append(e)
+    
+
 
     def total_amount(self):
         total = 0
         for expense in self.expenses:
             total += expense.amount
-        return total
+        return print(f"Total expenses: {total}")
 
     def month_total(self, month):
         total = 0
@@ -88,19 +89,18 @@ class Tracker:
             mon = int(x[1])
             if mon == month:
                 total += expense.amount
-        return total
 
+        return print(f"Total expenses for {month}: {total}")
+
+    def list_expenses(self):
+        lines = ["ID   DATE   DESCRIPTION   AMOUNT" ]
+        for expense in self.expenses:
+            line = f"{expense.id}, {expense.date}, {expense.description}, {expense.amount}$ "
+            lines.append(line)
+        return "\n".join(lines)
     def __str__(self):
-        lines = [ ]
+        lines = []
         for expense in self.expenses: 
             lines.append(str(expense))
         return "\n".join(lines)
-            
-'''
- r()
-r = Expenses()
-r.create_expense("Resenhinha", 40.30, datetime.datetime(2026, 3, 12) )
-t.add_expense(r)
-t.update_expense(1, "Value", 20.40) 
-print(r.value)
-'''
+

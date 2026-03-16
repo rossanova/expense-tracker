@@ -1,7 +1,7 @@
 from expense import Expense
 from track import  Tracker
+from datetime import datetime
 import argparse
-import datetime
 
 parser = argparse.ArgumentParser(description= "Track your expenses.")
 
@@ -16,12 +16,10 @@ delete_parser.add_argument("--id", type=int)
 list_parser = subparsers.add_parser("list")
 
 total_amount = subparsers.add_parser("summary")
-
-month_total = subparsers.add_parser("summary-monthly")
-month_total.add_argument("--month", type=int)
+total_amount.add_argument("--month", type=int)
 
 update = subparsers.add_parser("update")
-update.add_argument("--index")
+update.add_argument("--id")
 update.add_argument("--field")
 update.add_argument("--new_value")
 
@@ -53,25 +51,26 @@ elif args.command == "delete":
 elif args.command == "list":
     tracker = Tracker()
     tracker.load_saves()
-    print(tracker)
+    print(tracker.list_expenses())
 
 elif args.command == "summary": 
     tracker = Tracker()
     tracker.load_saves()
-    print(tracker.total_amount()) 
+    if args.month == None:    
+        tracker.total_amount() 
+    else:
+        tracker.month_total(args.month)
 
-elif args.command == "summary-monthly":
-    tracker = Tracker()
-    tracker.load_saves()
-    tracker.month_total(month= args.month)
-    print(tracker.month_total(args.month))
 
 elif args.command == "update":
     tracker = Tracker()
     tracker.load_saves()
+    new_index = int(args.id)
+    new_field = str(args.field)
+
     tracker.update_expense(
-        index_user= args.index,
-        field= args.field,
+        index_user= new_index,
+        field= new_field,
         new_value= args.new_value
     )
     tracker.save_expenses()
