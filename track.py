@@ -22,27 +22,40 @@ class Tracker:
 
     def delete_expense(self, index):
         for expense in self.expenses:
-            if expense.id == index:
-                self.expenses.remove(expense)
-                return print("Expense deleted sucessefully")
-            
+            try:
+                index = int(index)
+                if expense.id == index:
+                    self.expenses.remove(expense)
+                    return print("Expense deleted sucessefully")
+            except (ValueError, TypeError, IndexError):
+                print("Not a right index value")
 
 
     def update_expense(self, index_user, field, new_value):
+        count = 0
         for expense in self.expenses:
+            count += 1
             if expense.id == index_user:
             
-                if field == "Description" :
-                    expense.description = new_value.strip()
+                if field == "Description" or field == "description" :
+                    try:
+                        expense.description = new_value.strip()
+                    except (AttributeError, ValueError, TypeError):
+                        print("Not a name")
 
-
-                elif field == "Amount" :
-                    expense.amount = float(new_value)
-
+                elif field == "Amount" or field == "amount":
+                    try:                        
+                        updated_value = float(new_value)
+                        if updated_value > 0:
+                            expense.amount = updated_value
+                        else:
+                            print("Cant use negative number / zero")
+                    except (ValueError, TypeError):
+                        print("Thats not a number")
                 else:
                     print("Invalid field.")
-            else:
-                print("Invalide ID")
+            elif count == len(self.expenses):
+                print("Invalid ID")
             
 
     def save_expenses(self):
@@ -58,7 +71,7 @@ class Tracker:
             with open("expenses.json", "r") as f:
                 data = json.load(f)
         
-        except FileNotFoundError:
+        except (FileNotFoundError):
             print("There is nothing to load")
             self.expenses = []
             return
@@ -103,4 +116,5 @@ class Tracker:
         for expense in self.expenses: 
             lines.append(str(expense))
         return "\n".join(lines)
+
 
