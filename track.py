@@ -7,9 +7,11 @@ class Tracker:
         self.expenses = [ ]
 
     def add_expense(self, expense):
-        self.expenses.append(expense)
-        print(f"Expense added sucessfully (ID: {expense.id})")
-
+        if isinstance(expense, Expense):
+            self.expenses.append(expense)
+            print(f"Expense added sucessfully (ID: {expense.id})")
+        else:
+            print("You must add an expense")
     def next_id(self):
         if len(self.expenses) < 1:
             return 1
@@ -39,7 +41,11 @@ class Tracker:
             
                 if field == "Description" or field == "description" :
                     try:
-                        expense.description = new_value.strip()
+                        new_desc =  new_value.strip()
+                        if new_desc == "" or new_desc == '':
+                            print("Description cant be empty")
+                        else: 
+                            expense.description = new_desc
                     except (AttributeError, ValueError, TypeError):
                         print("Not a name")
 
