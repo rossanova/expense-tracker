@@ -1,5 +1,4 @@
 from expense import Expense
-import datetime
 import json
 
 class Tracker:
@@ -23,45 +22,57 @@ class Tracker:
             return x[-1] + 1  
 
     def delete_expense(self, index):
-        for expense in self.expenses:
-            try:
-                index = int(index)
-                if expense.id == index:
-                    self.expenses.remove(expense)
-                    return print("Expense deleted sucessefully")
-            except (ValueError, TypeError, IndexError):
-                print("Not a right index value")
-
+        try:
+            index = int(index)
+        except (ValueError, TypeError, IndexError):
+            print("Not a right index value")
+            return
+        
+        for expense in self.expenses:            
+            if expense.id == index:
+                self.expenses.remove(expense)
+                print("Expense deleted sucessefully")
+                return
+        print("Expense not found")
 
     def update_expense(self, index_user, field, new_value):
-        count = 0
+        field = field.lower()
+
         for expense in self.expenses:
-            count += 1
             if expense.id == index_user:
             
-                if field == "Description" or field == "description" :
+                if field == "description" :
                     try:
                         new_desc =  new_value.strip()
                         if new_desc == "" or new_desc == '':
                             print("Description cant be empty")
+                            return
                         else: 
                             expense.description = new_desc
+                            print("Expense sucessefully updated")
+                            return
                     except (AttributeError, ValueError, TypeError):
                         print("Not a name")
-
-                elif field == "Amount" or field == "amount":
+                        return
+                    
+                elif field == "amount":
                     try:                        
                         updated_value = float(new_value)
                         if updated_value > 0:
                             expense.amount = updated_value
+                            print("Expense sucessefully updated")
+                            return
                         else:
                             print("Cant use negative number / zero")
+                            return
                     except (ValueError, TypeError):
                         print("Thats not a number")
-                else:
-                    print("Invalid field.")
-            elif count == len(self.expenses):
-                print("Invalid ID")
+                        return
+                else:    
+                    print("Invalid Field")
+                    return
+
+        print("Invalid ID.")
             
 
     def save_expenses(self):
